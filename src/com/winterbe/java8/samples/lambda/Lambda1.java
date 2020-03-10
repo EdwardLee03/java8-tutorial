@@ -21,12 +21,15 @@ public class Lambda1 {
             }
         });
 
+        // lambda表达式，创建匿名对象
         Collections.sort(names, (String a, String b) -> {
             return b.compareTo(a);
         });
 
+        // lambda表达式，创建匿名对象
         Collections.sort(names, (String a, String b) -> b.compareTo(a));
 
+        // lambda表达式，创建匿名对象
         Collections.sort(names, (a, b) -> b.compareTo(a));
 
         System.out.println(names);
@@ -45,5 +48,4 @@ public class Lambda1 {
 
         System.out.println(names3);
     }
-
 }

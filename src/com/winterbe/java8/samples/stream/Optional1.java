@@ -8,6 +8,7 @@ import java.util.Optional;
 public class Optional1 {
 
     public static void main(String[] args) {
+        // 可选值容器
         Optional<String> optional = Optional.of("bam");
 
         optional.isPresent();           // true
@@ -16,5 +17,4 @@ public class Optional1 {
 
         optional.ifPresent((s) -> System.out.println(s.charAt(0)));     // "b"
     }
-
 }

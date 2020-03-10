@@ -12,6 +12,7 @@ public class Lambda4 {
     void testScopes() {
         int num = 1;
 
+        // 访问局部变量
         Lambda2.Converter<Integer, String> stringConverter =
                 (from) -> String.valueOf(from + num);
 
@@ -19,12 +20,16 @@ public class Lambda4 {
         System.out.println(convert);    // 3
 
         Lambda2.Converter<Integer, String> stringConverter2 = (from) -> {
-            outerNum = 13;
+            // 访问字段
+            outerNum = 23;
             return String.valueOf(from);
         };
 
         String[] array = new String[1];
         Lambda2.Converter<Integer, String> stringConverter3 = (from) -> {
+            // 访问静态变量
+            outerStaticNum = 72;
+            // 访问局部变量
             array[0] = "Hi there";
             return String.valueOf(from);
         };
@@ -37,5 +42,4 @@ public class Lambda4 {
     public static void main(String[] args) {
         new Lambda4().testScopes();
     }
-
 }

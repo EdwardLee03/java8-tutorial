@@ -1,9 +1,17 @@
-# Modern Java - A Guide to Java 8
+
+
+Modern Java - A Guide to Java 8 |
+现代Java - Java 8指南
+=================================================
 _This article was originally posted on [my blog](http://winterbe.com/posts/2014/03/16/java-8-tutorial/)._
 
 > **You should also read my [Java 11 Tutorial](https://winterbe.com/posts/2018/09/24/java-11-tutorial/) (including new language and API features from Java 9, 10 and 11).**
 
-Welcome to my introduction to [Java 8](https://jdk8.java.net/). This tutorial guides you step by step through all new language features. Backed by short and simple code samples you'll learn how to use default interface methods, lambda expressions, method references and repeatable annotations. At the end of the article you'll be familiar with the most recent [API](http://download.java.net/jdk8/docs/api/) changes like streams, functional interfaces, map extensions and the new Date API. **No walls of text, just a bunch of commented code snippets. Enjoy!**
+Welcome to my introduction to [Java 8](https://jdk8.java.net/).
+This tutorial guides you step by step through all new language features.
+Backed by short and simple code samples you'll learn **how to use `default interface methods, lambda expressions, method references` and repeatable annotations.**
+At the end of the article you'll be familiar with the most recent [API](http://download.java.net/jdk8/docs/api/) changes like `streams, functional interfaces`, map extensions and the new Date API.
+**No walls of text, just a bunch of commented code snippets. Enjoy!**
 
 ---
 
@@ -13,46 +21,49 @@ Welcome to my introduction to [Java 8](https://jdk8.java.net/). This tutorial gu
 
 ---
 
+
 ## Table of Contents
 
-* [Default Methods for Interfaces](#default-methods-for-interfaces)
-* [Lambda expressions](#lambda-expressions)
-* [Functional Interfaces](#functional-interfaces)
-* [Method and Constructor References](#method-and-constructor-references)
-* [Lambda Scopes](#lambda-scopes)
-  * [Accessing local variables](#accessing-local-variables)
-  * [Accessing fields and static variables](#accessing-fields-and-static-variables)
-  * [Accessing Default Interface Methods](#accessing-default-interface-methods)
-* [Built-in Functional Interfaces](#built-in-functional-interfaces)
-  * [Predicates](#predicates)
-  * [Functions](#functions)
-  * [Suppliers](#suppliers)
-  * [Consumers](#consumers)
-  * [Comparators](#comparators)
-* [Optionals](#optionals)
-* [Streams](#streams)
-  * [Filter](#filter)
-  * [Sorted](#sorted)
-  * [Map](#map)
-  * [Match](#match)
-  * [Count](#count)
-  * [Reduce](#reduce)
-* [Parallel Streams](#parallel-streams)
+* [Default Methods for Interfaces | 接口的默认方法](#default-methods-for-interfaces)
+* [Lambda expressions | Lambda表达式](#lambda-expressions)
+* [Functional Interfaces | 函数式接口](#functional-interfaces)
+* [Method and Constructor References | 方法和构造函数引用](#method-and-constructor-references)
+* [Lambda Scopes | Lambda作用域](#lambda-scopes)
+  * [Accessing local variables | 访问局部变量](#accessing-local-variables)
+  * [Accessing fields and static variables | 访问字段和静态变量](#accessing-fields-and-static-variables)
+  * [Accessing Default Interface Methods | 访问默认接口方法](#accessing-default-interface-methods)
+* [Built-in Functional Interfaces | 内置的函数式接口](#built-in-functional-interfaces)
+  * [Predicates | 谓词函数](#predicates)
+  * [Functions | 一元函数](#functions)
+  * [Suppliers | 对象提供者函数](#suppliers)
+  * [Consumers | 对象消费者函数](#consumers)
+  * [Comparators | 比较函数](#comparators)
+* [Optionals | 可选值的容器](#optionals)
+* [Streams | 数据流](#streams)
+  * [Filter | 过滤操作](#filter)
+  * [Sorted | 排序操作](#sorted)
+  * [Map | 映射操作](#map)
+  * [Match | 匹配操作](#match)
+  * [Count | 计数操作](#count)
+  * [Reduce | 规约操作](#reduce)
+* [Parallel Streams | 并行数据流](#parallel-streams)
   * [Sequential Sort](#sequential-sort)
   * [Parallel Sort](#parallel-sort)
-* [Maps](#maps)
+* [Maps | 映射表](#maps)
 * [Date API](#date-api)
   * [Clock](#clock)
   * [Timezones](#timezones)
   * [LocalTime](#localtime)
   * [LocalDate](#localdate)
   * [LocalDateTime](#localdatetime)
-* [Annotations](#annotations)
+* [Annotations | 注解](#annotations)
 * [Where to go from here?](#where-to-go-from-here)
 
-## Default Methods for Interfaces
 
-Java 8 enables us to add non-abstract method implementations to interfaces by utilizing the `default` keyword. This feature is also known as [virtual extension methods](http://stackoverflow.com/a/24102730). 
+## Default Methods for Interfaces | 接口的默认方法
+
+Java 8 enables us to add **non-abstract method implementations to interfaces** by utilizing the `default` keyword.
+This feature is also known as [virtual extension methods](http://stackoverflow.com/a/24102730).
 
 Here is our first example:
 
@@ -60,32 +71,38 @@ Here is our first example:
 interface Formula {
     double calculate(int a);
 
+    // 接口的默认方法
     default double sqrt(int a) {
         return Math.sqrt(a);
     }
 }
 ```
 
-Besides the abstract method `calculate` the interface `Formula` also defines the default method `sqrt`. Concrete classes only have to implement the abstract method `calculate`. The default method `sqrt` can be used out of the box.
+Besides the abstract method `calculate` the interface `Formula` also defines the default method `sqrt`.
+Concrete classes only have to implement the abstract method `calculate`.
+The default method `sqrt` can be used out of the box.
 
 ```java
 Formula formula = new Formula() {
     @Override
     public double calculate(int a) {
+        // 调用接口的默认方法
         return sqrt(a * 100);
     }
 };
 
 formula.calculate(100);     // 100.0
+// 调用接口的默认方法(实例方法)
 formula.sqrt(16);           // 4.0
 ```
 
-The formula is implemented as an anonymous object. The code is quite verbose: 6 lines of code for such a simple calculation of `sqrt(a * 100)`. As we'll see in the next section, there's a much nicer way of implementing single method objects in Java 8.
+The formula is implemented as an **anonymous object**. The code is quite verbose: 6 lines of code for such a simple calculation of `sqrt(a * 100)`.
+As we'll see in the next section, there's a much nicer way of implementing **single method objects** in Java 8.
 
 
-## Lambda expressions
+## Lambda expressions | Lambda表达式
 
-Let's start with a simple example of how to sort a list of strings in prior versions of Java:
+Let's start with a simple example of `how to sort a list of strings in prior versions of Java`:
 
 ```java
 List<String> names = Arrays.asList("peter", "anna", "mike", "xenia");
@@ -98,11 +115,13 @@ Collections.sort(names, new Comparator<String>() {
 });
 ```
 
-The static utility method `Collections.sort` accepts a list and a comparator in order to sort the elements of the given list. You often find yourself creating anonymous comparators and pass them to the sort method.
+The static utility method `Collections.sort` accepts a list and a comparator in order to sort the elements of the given list.
+You often find yourself creating **anonymous comparators** and pass them to the sort method.
 
-Instead of creating anonymous objects all day long, Java 8 comes with a much shorter syntax, **lambda expressions**:
+Instead of **creating `anonymous objects`** all day long, Java 8 comes with `a much shorter syntax`, **lambda expressions**:
 
 ```java
+// lambda表达式，创建匿名对象
 Collections.sort(names, (String a, String b) -> {
     return b.compareTo(a);
 });
@@ -111,27 +130,38 @@ Collections.sort(names, (String a, String b) -> {
 As you can see the code is much shorter and easier to read. But it gets even shorter:
 
 ```java
+// lambda表达式，创建匿名对象
 Collections.sort(names, (String a, String b) -> b.compareTo(a));
 ```
 
-For one line method bodies you can skip both the braces `{}` and the `return` keyword. But it gets even shorter:
+For **one line method bodies** you can skip both the braces `{}` and the `return` keyword. But it gets even shorter:
 
 ```java
+// lambda表达式，创建匿名对象
 names.sort((a, b) -> b.compareTo(a));
 ```
 
-List now has a `sort` method. Also the java compiler is aware of the parameter types so you can skip them as well. Let's dive deeper into how lambda expressions can be used in the wild.
+List now has a `sort` method.
+Also **the java compiler is aware of the `parameter types`** so you can skip them as well.
+Let's dive deeper into **how `lambda expressions` can be used in the wild.**
 
 
-## Functional Interfaces
+## Functional Interfaces | 函数式接口
 
-How does lambda expressions fit into Java's type system? Each lambda corresponds to a given type, specified by an interface. A so called _functional interface_ must contain **exactly one abstract method** declaration. Each lambda expression of that type will be matched to this abstract method. Since default methods are not abstract you're free to add default methods to your functional interface.
+**How does `lambda expressions` fit into `Java's type system`?**
+**Each `lambda` corresponds to a given `type`, specified by an `interface`.**
+A so called **_functional interface_** must contain **exactly one abstract method** declaration.
+**Each `lambda expression` of that `type` will be matched to this abstract method.**
+Since `default methods` are not abstract you're free to add default methods to your `functional interface`.
 
-We can use arbitrary interfaces as lambda expressions as long as the interface only contains one abstract method. To ensure that your interface meet the requirements, you should add the `@FunctionalInterface` annotation. The compiler is aware of this annotation and throws a compiler error as soon as you try to add a second abstract method declaration to the interface.
+We can use arbitrary `interfaces` as `lambda expressions` as long as the interface only contains one abstract method.
+To ensure that your interface meet the requirements, you should add the `@FunctionalInterface` annotation.
+`The compiler is aware of this annotation and throws a compiler error` as soon as you try to `add a second abstract method declaration to the interface.`
 
 Example:
 
 ```java
+// 函数式接口
 @FunctionalInterface
 interface Converter<F, T> {
     T convert(F from);
@@ -139,25 +169,29 @@ interface Converter<F, T> {
 ```
 
 ```java
+// lambda表达式，创建匿名对象
 Converter<String, Integer> converter = (from) -> Integer.valueOf(from);
 Integer converted = converter.convert("123");
 System.out.println(converted);    // 123
 ```
 
-Keep in mind that the code is also valid if the `@FunctionalInterface` annotation would be omitted.
+`Keep in mind` that the code is also valid if the `@FunctionalInterface` annotation would be omitted.
 
 
-## Method and Constructor References
+## Method and Constructor References | 方法和构造函数引用
 
-The above example code can be further simplified by utilizing static method references:
+The above example code can be further simplified by utilizing **static method references**:
 
 ```java
+// 静态方法引用
 Converter<String, Integer> converter = Integer::valueOf;
 Integer converted = converter.convert("123");
 System.out.println(converted);   // 123
 ```
 
-Java 8 enables you to pass references of methods or constructors via the `::` keyword. The above example shows how to reference a static method. But we can also reference object methods:
+Java 8 enables you to pass **references of methods or constructors** via the `::` keyword.
+The above example shows `how to reference a static method`.
+But we can also `reference object methods`:
 
 ```java
 class Something {
@@ -169,12 +203,14 @@ class Something {
 
 ```java
 Something something = new Something();
+// 对象方法引用
 Converter<String, String> converter = something::startsWith;
 String converted = converter.convert("Java");
 System.out.println(converted);    // "J"
 ```
 
-Let's see how the `::` keyword works for constructors. First we define an example class with different constructors:
+Let's see how the `::` keyword works for `constructors`.
+First we define an example class with `different constructors`:
 
 ```java
 class Person {
@@ -190,63 +226,75 @@ class Person {
 }
 ```
 
-Next we specify a person factory interface to be used for creating new persons:
+Next we specify a person `factory interface` to be used for `creating new persons`:
 
 ```java
+// 函数式接口
+@FunctionalInterface
 interface PersonFactory<P extends Person> {
     P create(String firstName, String lastName);
 }
 ```
 
-Instead of implementing the factory manually, we glue everything together via constructor references:
+Instead of implementing the factory manually, we glue everything together via **constructor references**:
 
 ```java
+// 构造函数引用
 PersonFactory<Person> personFactory = Person::new;
 Person person = personFactory.create("Peter", "Parker");
 ```
 
-We create a reference to the Person constructor via `Person::new`. The Java compiler automatically chooses the right constructor by matching the signature of `PersonFactory.create`.
+We create a reference to the Person constructor via `Person::new`.
+**The Java compiler automatically chooses the right constructor by matching the signature of `PersonFactory.create`.**
 
-## Lambda Scopes
 
-Accessing outer scope variables from lambda expressions is very similar to anonymous objects. You can access final variables from the local outer scope as well as instance fields and static variables.
+## Lambda Scopes | Lambda作用域
 
-### Accessing local variables
+**Accessing `outer scope variables` from `lambda expressions`** is very similar to `anonymous objects`.
+You can access `final variables from the local outer scope` as well as `instance fields` and `static variables`.
 
-We can read final local variables from the outer scope of lambda expressions:
+### Accessing local variables | 访问局部变量
+
+We can read **final local variables from the outer scope of `lambda expressions`**:
 
 ```java
 final int num = 1;
+// 访问局部变量
 Converter<Integer, String> stringConverter =
         (from) -> String.valueOf(from + num);
 
 stringConverter.convert(2);     // 3
 ```
 
-But different to anonymous objects the variable `num` does not have to be declared final. This code is also valid:
+But different to `anonymous objects` the variable `num` does not have to be declared `final`.
+This code is also valid:
 
 ```java
 int num = 1;
+// 访问局部变量
 Converter<Integer, String> stringConverter =
         (from) -> String.valueOf(from + num);
 
 stringConverter.convert(2);     // 3
 ```
 
-However `num` must be implicitly final for the code to compile. The following code does **not** compile:
+However `num` must be `implicitly final` for the code to compile.
+The following code does **not** compile:
 
 ```java
 int num = 1;
 Converter<Integer, String> stringConverter =
         (from) -> String.valueOf(from + num);
+// not implicitly final
 num = 3;
 ```
 
 Writing to `num` from within the lambda expression is also prohibited.
 
-### Accessing fields and static variables
+### Accessing fields and static variables | 访问字段和静态变量
 
-In contrast to local variables, we have both read and write access to instance fields and static variables from within lambda expressions. This behaviour is well known from anonymous objects.
+In contrast to local variables, we have both **read and write access to `instance fields` and `static variables` from within `lambda expressions`.**
+This behaviour is well known from anonymous objects.
 
 ```java
 class Lambda4 {
@@ -255,11 +303,13 @@ class Lambda4 {
 
     void testScopes() {
         Converter<Integer, String> stringConverter1 = (from) -> {
+            // 访问字段
             outerNum = 23;
             return String.valueOf(from);
         };
 
         Converter<Integer, String> stringConverter2 = (from) -> {
+            // 访问静态变量
             outerStaticNum = 72;
             return String.valueOf(from);
         };
@@ -267,75 +317,94 @@ class Lambda4 {
 }
 ```
 
-### Accessing Default Interface Methods
+### Accessing Default Interface Methods | 访问默认接口方法
 
-Remember the formula example from the first section? Interface `Formula` defines a default method `sqrt` which can be accessed from each formula instance including anonymous objects. This does not work with lambda expressions.
+Remember the formula example from the first section?
+Interface `Formula` defines a default method `sqrt` which can be accessed from each formula instance including `anonymous objects`.
+This does `not work with lambda expressions`.
 
-Default methods **cannot** be accessed from within lambda expressions. The following code does not compile:
+`Default methods` **cannot** be accessed from within `lambda expressions`.
+The following code does not compile:
 
 ```java
+// 无法从lambda表达式中访问默认方法
 Formula formula = (a) -> sqrt(a * 100);
 ```
 
 
-## Built-in Functional Interfaces
+## Built-in Functional Interfaces | 内置的函数式接口
 
-The JDK 1.8 API contains many built-in functional interfaces. Some of them are well known from older versions of Java like `Comparator` or `Runnable`. Those existing interfaces are extended to enable Lambda support via the `@FunctionalInterface` annotation.
+The **JDK 8 API contains many built-in functional interfaces.**
+Some of them are well known from older versions of Java like `Comparator` or `Runnable`.
+Those existing interfaces are extended to enable _Lambda_ support via the `@FunctionalInterface` annotation.
 
-But the Java 8 API is also full of new functional interfaces to make your life easier. Some of those new interfaces are well known from the [Google Guava](https://code.google.com/p/guava-libraries/) library. Even if you're familiar with this library you should keep a close eye on how those interfaces are extended by some useful method extensions.
+But the Java 8 API is also full of `new functional interfaces to make your life easier`.
+Some of those new interfaces are well known from the [Google Guava](https://code.google.com/p/guava-libraries/) library.
+Even if you're familiar with this library you `should keep a close eye` on **how those interfaces are extended by some useful method extensions.**
 
-### Predicates
+### Predicates | 谓词函数
 
-Predicates are boolean-valued functions of one argument. The interface contains various default methods for composing predicates to complex logical terms (and, or, negate)
+**Predicates are `boolean-valued functions` of one argument.**
+The interface contains various default methods for `composing predicates` to complex logical terms (`and, or, negate`).
 
 ```java
+// 谓词函数
 Predicate<String> predicate = (s) -> s.length() > 0;
 
 predicate.test("foo");              // true
 predicate.negate().test("foo");     // false
 
+// 谓词函数
 Predicate<Boolean> nonNull = Objects::nonNull;
 Predicate<Boolean> isNull = Objects::isNull;
 
+// 谓词函数
 Predicate<String> isEmpty = String::isEmpty;
 Predicate<String> isNotEmpty = isEmpty.negate();
 ```
 
-### Functions
+### Functions | 一元函数
 
-Functions accept one argument and produce a result. Default methods can be used to chain multiple functions together (compose, andThen).
+**Functions accept one argument and produce a result.**
+Default methods can be used to `chain multiple functions together` (`compose, andThen`).
 
 ```java
+// 一元函数
 Function<String, Integer> toInteger = Integer::valueOf;
 Function<String, String> backToString = toInteger.andThen(String::valueOf);
 
 backToString.apply("123");     // "123"
 ```
 
-### Suppliers
+### Suppliers | 对象提供者函数
 
-Suppliers produce a result of a given generic type. Unlike Functions, Suppliers don't accept arguments.
+**Suppliers produce a result of a given `generic type`.**
+Unlike Functions, `Suppliers don't accept arguments`.
 
 ```java
+// 对象提供者函数
 Supplier<Person> personSupplier = Person::new;
 personSupplier.get();   // new Person
 ```
 
-### Consumers
+### Consumers | 对象消费者函数
 
-Consumers represent operations to be performed on a single input argument.
+**Consumers represent `operations`** to be performed on a single input argument.
 
 ```java
-Consumer<Person> greeter = (p) -> System.out.println("Hello, " + p.firstName);
+// 对象消费者函数
+Consumer<Person> greeter = (p) -> System.out.println("Hello, " + p.getFirstName());
 greeter.accept(new Person("Luke", "Skywalker"));
 ```
 
-### Comparators
+### Comparators | 比较函数
 
-Comparators are well known from older versions of Java. Java 8 adds various default methods to the interface.
+Comparators are well known from older versions of Java.
+Java 8 adds various `default methods` to the interface.
 
 ```java
-Comparator<Person> comparator = (p1, p2) -> p1.firstName.compareTo(p2.firstName);
+// 比较函数
+Comparator<Person> comparator = (p1, p2) -> p1.getFirstName().compareTo(p2.getFirstName());
 
 Person p1 = new Person("John", "Doe");
 Person p2 = new Person("Alice", "Wonderland");
@@ -344,13 +413,18 @@ comparator.compare(p1, p2);             // > 0
 comparator.reversed().compare(p1, p2);  // < 0
 ```
 
-## Optionals
 
-Optionals are not functional interfaces, but nifty utilities to prevent `NullPointerException`. It's an important concept for the next section, so let's have a quick look at how Optionals work.
+## Optionals | 可选值的容器
 
-Optional is a simple container for a value which may be null or non-null. Think of a method which may return a non-null result but sometimes return nothing. Instead of returning `null` you return an `Optional` in Java 8.
+Optionals are `not functional interfaces`, but nifty utilities to prevent `NullPointerException`.
+It's **an important concept** for the next section, so let's have a quick look at **how Optionals work**.
+
+**Optional is a simple `container for a value` which may be `null` or `non-null`.**
+Think of a method which may return a non-null result but sometimes return nothing.
+Instead of returning `null` you return an `Optional` in Java 8.
 
 ```java
+// 可选值容器
 Optional<String> optional = Optional.of("bam");
 
 optional.isPresent();           // true
@@ -360,11 +434,14 @@ optional.orElse("fallback");    // "bam"
 optional.ifPresent((s) -> System.out.println(s.charAt(0)));     // "b"
 ```
 
-## Streams
 
-A `java.util.Stream` represents a sequence of elements on which one or more operations can be performed. Stream operations are either _intermediate_ or _terminal_. While terminal operations return a result of a certain type, intermediate operations return the stream itself so you can chain multiple method calls in a row. Streams are created on a source, e.g. a `java.util.Collection` like lists or sets (maps are not supported). Stream operations can either be executed sequentially or parallely.
+## Streams | 数据流
 
-> Streams are extremely powerful, so I wrote a separate [Java 8 Streams Tutorial](http://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples/). **You should also check out [Sequency](https://github.com/winterbe/sequency) as a similiar library for the web.**
+**A `java.util.Stream` represents `a sequence of elements` on which one or more `operations` can be performed.**
+**Stream operations** are either _intermediate_ or _terminal_.
+While terminal operations return a result of a certain type, intermediate operations return the stream itself so you can chain multiple method calls in a row. Streams are created on a source, e.g. a `java.util.Collection` like lists or sets (maps are not supported). Stream operations can either be executed sequentially or parallel.
+
+> Streams are extremely powerful, so I wrote a separate [Java 8 Streams Tutorial](http://winterbe.com/posts/2014/07/31/java8-stream-tutorial-examples/). **You should also check out [Sequency](https://github.com/winterbe/sequency) as a similar library for the web.**
 
 Let's first look how sequential streams work. First we create a sample source in form of a list of strings:
 
@@ -382,7 +459,7 @@ stringCollection.add("ddd1");
 
 Collections in Java 8 are extended so you can simply create streams either by calling `Collection.stream()` or `Collection.parallelStream()`. The following sections explain the most common stream operations.
 
-### Filter
+### Filter | 过滤操作
 
 Filter accepts a predicate to filter all elements of the stream. This operation is _intermediate_ which enables us to call another stream operation (`forEach`) on the result. ForEach accepts a consumer to be executed for each element in the filtered stream. ForEach is a terminal operation. It's `void`, so we cannot call another stream operation.
 
@@ -395,7 +472,7 @@ stringCollection
 // "aaa2", "aaa1"
 ```
 
-### Sorted
+### Sorted | 排序操作
 
 Sorted is an _intermediate_ operation which returns a sorted view of the stream. The elements are sorted in natural order unless you pass a custom `Comparator`.
 
@@ -416,7 +493,7 @@ System.out.println(stringCollection);
 // ddd2, aaa2, bbb1, aaa1, bbb3, ccc, bbb2, ddd1
 ```
 
-### Map
+### Map | 映射操作
 
 The _intermediate_ operation `map` converts each element into another object via the given function. The following example converts each string into an upper-cased string. But you can also use `map` to transform each object into another type. The generic type of the resulting stream depends on the generic type of the function you pass to `map`.
 
@@ -430,7 +507,7 @@ stringCollection
 // "DDD2", "DDD1", "CCC", "BBB3", "BBB2", "AAA2", "AAA1"
 ```
 
-### Match
+### Match | 匹配操作
 
 Various matching operations can be used to check whether a certain predicate matches the stream. All of those operations are _terminal_ and return a boolean result.
 
@@ -457,7 +534,7 @@ boolean noneStartsWithZ =
 System.out.println(noneStartsWithZ);      // true
 ```
 
-#### Count
+### Count | 计数操作
 
 Count is a _terminal_ operation returning the number of elements in the stream as a `long`.
 
@@ -471,8 +548,7 @@ long startsWithB =
 System.out.println(startsWithB);    // 3
 ```
 
-
-### Reduce
+### Reduce | 规约操作
 
 This _terminal_ operation performs a reduction on the elements of the stream with the given function. The result is an `Optional` holding the reduced value.
 
@@ -812,3 +888,4 @@ I've also published a bunch of follow-up articles on my [blog](http://winterbe.c
 - [Using Backbone.js with Java 8 Nashorn](http://winterbe.com/posts/2014/04/07/using-backbonejs-with-nashorn/)
 
 You should [follow me on Twitter](https://twitter.com/winterbe_). Thanks for reading!
+
