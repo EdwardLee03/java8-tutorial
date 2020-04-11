@@ -68,13 +68,15 @@ At the end of the article you'll be familiar with the most recent [API](http://d
 Java 8 enables us to add **non-abstract method implementations to interfaces** by utilizing the `default` keyword.
 This feature is also known as [virtual extension methods](http://stackoverflow.com/a/24102730).
 
+使用`default`关键字向接口添加*非抽象方法实现*，此功能也称为*虚拟扩展方法*。
+
 Here is our first example:
 
 ```java
 interface Formula {
     double calculate(int a);
 
-    // 接口的默认方法
+    // 接口的默认方法，虚拟扩展方法（实例方法）
     default double sqrt(int a) {
         return Math.sqrt(a);
     }
@@ -85,22 +87,28 @@ Besides the abstract method `calculate` the interface `Formula` also defines the
 Concrete classes only have to implement the abstract method `calculate`.
 The default method `sqrt` can be used out of the box.
 
+具体类只需要实现抽象方法，默认方法可以开箱即用。
+
 ```java
+// 匿名对象
 Formula formula = new Formula() {
     @Override
     public double calculate(int a) {
-        // 调用接口的默认方法
+        // 调用接口的默认方法(this)，实例上下文
         return sqrt(a * 100);
     }
 };
 
 formula.calculate(100);     // 100.0
-// 调用接口的默认方法(实例方法)
+// 调用接口的默认方法(实例方法)，实例上下文
 formula.sqrt(16);           // 4.0
 ```
 
 The formula is implemented as an **anonymous object**. The code is quite verbose: 6 lines of code for such a simple calculation of `sqrt(a * 100)`.
 As we'll see in the next section, there's a much nicer way of implementing **single method objects** in Java 8.
+
+作为*匿名对象*实现。
+正如我们将在下一节中看到的，在Java 8中有一种更好的实现**单一方法对象**的方法。
 
 
 ## Lambda expressions | Lambda表达式
