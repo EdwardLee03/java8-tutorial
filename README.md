@@ -1,17 +1,20 @@
 
 
-Modern Java - A Guide to Java 8 |
-现代Java - Java 8指南
-=================================================
-_This article was originally posted on [my blog](http://winterbe.com/posts/2014/03/16/java-8-tutorial/)._
+Modern Java - A Guide to Java 8 | 现代Java - Java 8指南
+======================================================
+_This article was originally posted on [my blog - <Java 8教程>](http://winterbe.com/posts/2014/03/16/java-8-tutorial/)._
 
-> **You should also read my [Java 11 Tutorial](https://winterbe.com/posts/2018/09/24/java-11-tutorial/) (including new language and API features from Java 9, 10 and 11).**
+> **You should also read my [Java 11 Tutorial - <Java 11教程>](https://winterbe.com/posts/2018/09/24/java-11-tutorial/) (including new language and API features from Java 9, 10 and 11).**
 
 Welcome to my introduction to [Java 8](https://jdk8.java.net/).
 This tutorial guides you step by step through all new language features.
 Backed by short and simple code samples you'll learn **how to use `default interface methods, lambda expressions, method references` and repeatable annotations.**
 At the end of the article you'll be familiar with the most recent [API](http://download.java.net/jdk8/docs/api/) changes like `streams, functional interfaces`, map extensions and the new Date API.
 **No walls of text, just a bunch of commented code snippets. Enjoy!**
+
+本教程将引导您逐步完成所有新的语言功能。支持简短和简单的代码示例，您将学习**如何使用`默认接口方法、lambda表达式、方法引用`和可重复的注解。**
+在文章的结尾，您会熟悉最新的API更改，像`数据流操作、函数式接口`、映射扩展和新的日期API。
+**本文没有墙壁，只是一堆注释的代码片段。享受吧！**
 
 ---
 
@@ -22,7 +25,7 @@ At the end of the article you'll be familiar with the most recent [API](http://d
 ---
 
 
-## Table of Contents
+## Table of Contents | 内容目录
 
 * [Default Methods for Interfaces | 接口的默认方法](#default-methods-for-interfaces)
 * [Lambda expressions | Lambda表达式](#lambda-expressions)
@@ -34,30 +37,30 @@ At the end of the article you'll be familiar with the most recent [API](http://d
   * [Accessing Default Interface Methods | 访问默认接口方法](#accessing-default-interface-methods)
 * [Built-in Functional Interfaces | 内置的函数式接口](#built-in-functional-interfaces)
   * [Predicates | 谓词函数](#predicates)
-  * [Functions | 一元函数](#functions)
+  * [Functions | 函数(一元/二元/高阶)](#functions)
   * [Suppliers | 对象提供者函数](#suppliers)
   * [Consumers | 对象消费者函数](#consumers)
-  * [Comparators | 比较函数](#comparators)
+  * [Comparators | 对象比较器函数](#comparators)
 * [Optionals | 可选值的容器](#optionals)
-* [Streams | 数据流](#streams)
+* [Streams | 数据流操作](#streams)
   * [Filter | 过滤操作](#filter)
   * [Sorted | 排序操作](#sorted)
   * [Map | 映射操作](#map)
   * [Match | 匹配操作](#match)
   * [Count | 计数操作](#count)
   * [Reduce | 规约操作](#reduce)
-* [Parallel Streams | 并行数据流](#parallel-streams)
-  * [Sequential Sort](#sequential-sort)
-  * [Parallel Sort](#parallel-sort)
+* [Parallel Streams | 并行的数据流操作](#parallel-streams)
+  * [Sequential Sort | 顺序排序](#sequential-sort)
+  * [Parallel Sort | 并行排序](#parallel-sort)
 * [Maps | 映射表](#maps)
-* [Date API](#date-api)
-  * [Clock](#clock)
-  * [Timezones](#timezones)
-  * [LocalTime](#localtime)
-  * [LocalDate](#localdate)
-  * [LocalDateTime](#localdatetime)
+* [Date API | 日期API](#date-api)
+  * [Clock | 逻辑时钟](#clock)
+  * [Timezones | 时区](#timezones)
+  * [LocalTime | 当地时间](#localtime)
+  * [LocalDate | 当地日期](#localdate)
+  * [LocalDateTime | 当地日期时间](#localdatetime)
 * [Annotations | 注解](#annotations)
-* [Where to go from here?](#where-to-go-from-here)
+* [Where to go from here? | 下一步](#where-to-go-from-here)
 
 
 ## Default Methods for Interfaces | 接口的默认方法
