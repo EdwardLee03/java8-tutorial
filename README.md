@@ -107,7 +107,7 @@ formula.sqrt(16);           // 4.0
 The formula is implemented as an **anonymous object**. The code is quite verbose: 6 lines of code for such a simple calculation of `sqrt(a * 100)`.
 As we'll see in the next section, there's a much nicer way of implementing **single method objects** in Java 8.
 
-作为*匿名对象*实现。
+作为**匿名对象**实现。
 正如我们将在下一节中看到的，在Java 8中有一种更好的实现**单一方法对象**的方法。
 
 
